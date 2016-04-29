@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+package proto;
+
+enum PluginStatus {
+  NOTINSTALLED = 0;
+  OK = 1;
+  CURRENTLYNOTREACHABLE = 2;
+}
+enum Responses {
+  ACK = 0;
+  ERROR = 1;
+}
+
+message Empty {
+}
+message GiveStatusRequest {
+  string name = 1;
+  PluginStatus status = 2;
+}
+message NetResponse {
+  Responses response = 1;
+  string details = 2;
+}
+message NameRequest {
+  string name = 1;
+}
+message Plugins {
+  repeated Plugin plugins = 1;
+}
+message GetPluginResponse {
+  NetResponse response = 1;
+  Plugin plugin = 2;
+}
+message Plugin {
+  string name = 1;
+  PluginStatus pluginStatus = 3;
+}
+message InstallPluginRequest {
+  Plugin plugin = 1;
+  string cmd = 2;
+}
+message RegisterResponse {
+  Responses response = 1;
+  string pingTopic = 2;
+}
+message Ping {
+}
+message Pong {
+}
+
+message NewPluginRequest {
+  string directory = 1;
+  string name = 2;
+  string url = 3;
+}
+
+message NewPluginResponse {
+  bool status = 1;
+}
