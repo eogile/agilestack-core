@@ -1,0 +1,35 @@
+machine:
+  services:
+    - docker
+  environment:
+    PROJECT_PARENT: "$HOME/.go_project/src/github.com/$CIRCLE_PROJECT_USERNAME"
+    PROJECT_PATH: "$PROJECT_PARENT/$CIRCLE_PROJECT_REPONAME"
+
+dependencies:
+  pre:
+    - docker version
+    - go version
+
+  override:
+    - mkdir -p $PROJECT_PARENT
+    - ln -fs $HOME/$CIRCLE_PROJECT_REPONAME $PROJECT_PATH
+    - |
+      echo 'export GOPATH=$GOPATH:$HOME/.go_project' >> ~/.circlerc
+    - cd $PROJECT_PATH && make setup
+    - cd $PROJECT_PATH && make
+
+test:
+  pre:
+    - docker pull nats
+    - docker pull eogile/agilestack-root-app && docker tag eogile/agilestack-root-app agilestack-root-app
+    - docker images
+
+  override:
+    - cd $PROJECT_PATH && make test
+
+deployment:
+  hub:
+    branch: circleci
+    commands:
+      - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+      - cd $PROJECT_PATH && make docker-deploy

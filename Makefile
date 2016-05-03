@@ -26,10 +26,12 @@ proto/registry.pb.go : proto/registry.proto
 #          SETUP           #
 ############################
 
-setup: go-deps
+setup: protobuf go-deps
+
+protobuf: proto/registry.pb.go
 
 go-deps :
-		go get -u -t $(shell go list ./... | grep -v /vendor/)
+		go get -t $(shell go list ./... | grep -v /vendor/)
 
 
 ############################
@@ -56,4 +58,4 @@ docker-deploy :
 clean :
 		$(RM) $(NAME)
 
-.PHONY : install docker-build go-build setup go-deps test docker-deploy clean
+.PHONY : install docker-build go-build setup protobuf go-deps test docker-deploy clean

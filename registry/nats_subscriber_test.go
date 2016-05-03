@@ -29,7 +29,7 @@ func TestListAvailablePluginsNats(t *testing.T) {
 		t.Errorf("Error should be nil : %v", err)
 	}
 	if len(plugins.Plugins) == 0 {
-		t.Errorf("There should be at least one available plugin")
+		t.Errorf("There should be at least one available plugin. Got zero.")
 	}
 }
 
@@ -54,7 +54,7 @@ func TestListInstalledPluginsNats(t *testing.T) {
 		t.Errorf("Error should be nil : %v", err)
 	}
 	if len(plugins.Plugins) > 0 {
-		t.Errorf("There should be no installed plugins")
+		t.Errorf("There should be no installed plugins. Got %v", plugins.Plugins)
 	}
 }
 
@@ -72,7 +72,7 @@ func TestInstallPluginNats(t *testing.T) {
 	 */
 	connection := registry.EstablishConnection(localhostNatsServerURL)
 
-	plugin := &pb.Plugin{Name: "agilestack-room-booking-api"}
+	plugin := &pb.Plugin{Name: testPluginName}
 	request := pb.InstallPluginRequest{Plugin: plugin}
 
 	var result = pb.NetResponse{}
@@ -99,7 +99,7 @@ func TestInstallPluginNats(t *testing.T) {
 		&pb.Empty{}, &plugins, 5000*time.Millisecond)
 
 	if len(plugins.Plugins) != 1 {
-		t.Errorf("There should be one installed plugin, got %d", len(plugins.Plugins))
+		t.Errorf("There should be one installed plugin, got %d : %v", len(plugins.Plugins), plugins.Plugins)
 		return
 	}
 
@@ -110,7 +110,7 @@ func TestInstallPluginNats(t *testing.T) {
 		}
 	}
 	if !pluginPresent {
-		t.Errorf("Plugin %s is not installed", plugin.Name)
+		t.Errorf("Plugin %s is not installed. Installed plugins: %v", plugin.Name, plugins.Plugins)
 	}
 }
 
@@ -128,7 +128,7 @@ func TestUninstallPluginNats(t *testing.T) {
 	 */
 	connection := registry.EstablishConnection(localhostNatsServerURL)
 
-	plugin := &pb.Plugin{Name: "agilestack-room-booking-api"}
+	plugin := &pb.Plugin{Name: testPluginName}
 	request := pb.InstallPluginRequest{Plugin: plugin}
 
 	/*
@@ -164,6 +164,6 @@ func TestUninstallPluginNats(t *testing.T) {
 		&pb.Empty{}, &plugins, 10000*time.Millisecond)
 
 	if len(plugins.Plugins) != 0 {
-		t.Errorf("There should be no installed plugins")
+		t.Errorf("There should be no installed plugins. Got %v", plugins.Plugins)
 	}
 }

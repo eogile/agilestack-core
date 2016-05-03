@@ -13,6 +13,7 @@ import (
 
 	pb "github.com/eogile/agilestack-core/proto"
 	"github.com/eogile/agilestack-core/registry"
+	"github.com/eogile/agilestack-core/registry/storage"
 	"github.com/eogile/agilestack-utils/dockerclient"
 	"github.com/fsouza/go-dockerclient"
 )
@@ -31,12 +32,6 @@ var localhostNatsServerURL string
  */
 func init() {
 	log.Println("main init")
-	sharedDir := os.Getenv("SHARED_FOLDER")
-	if sharedDir == "" {
-		homeDir := os.Getenv("HOME")
-		os.Setenv("SHARED_FOLDER", homeDir+"/agilestack/shared")
-	}
-
 	log.SetFlags(log.Lmicroseconds | log.Ldate | log.Ltime)
 }
 
@@ -113,8 +108,9 @@ func uninstallPlugins(includingNats bool, all bool) {
 	containers, _ := dockerClient.ListContainers(listOps)
 
 	for _, container := range containers {
-		if (includingNats && "nats" == container.Image) || strings.HasPrefix(container.Image, "agilestack-") {
-			log.Printf("Removing container %s", container.Names[0])
+		pluginName := storage.GetPluginName(container.Image)
+		if (includingNats && "nats" == pluginName) || strings.HasPrefix(pluginName, "agilestack-") {
+			log.Printf("Removing container %s", pluginName)
 			dockerClient.StopContainer(container.ID, 10)
 			removeOpts := docker.RemoveContainerOptions{ID: container.ID}
 			dockerClient.RemoveContainer(removeOpts)
@@ -189,7 +185,7 @@ func installNatsServer() {
 	}
 
 	containerOptions := docker.CreateContainerOptions{
-		Name:       "agilestack-nats",
+		Name:       "nats",
 		Config:     &containerConfig,
 		HostConfig: &hostConfig,
 	}
