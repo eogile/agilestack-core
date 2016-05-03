@@ -20,7 +20,8 @@ dependencies:
 test:
   pre:
     - docker pull nats
-    - docker pull eogile/agilestack-root-app && docker tag eogile/agilestack-root-app agilestack-root-app
+    - docker pull eogile/agilestack-root-app:latest && docker tag eogile/agilestack-root-app:latest agilestack-root-app:latest
+    - docker images
 
   override:
     - cd $HOME/.go_project/src/github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME && make test
