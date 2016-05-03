@@ -72,7 +72,7 @@ func TestInstallPluginNats(t *testing.T) {
 	 */
 	connection := registry.EstablishConnection(localhostNatsServerURL)
 
-	plugin := &pb.Plugin{Name: "agilestack-room-booking-api"}
+	plugin := &pb.Plugin{Name: "agilestack-root-app"}
 	request := pb.InstallPluginRequest{Plugin: plugin}
 
 	var result = pb.NetResponse{}
