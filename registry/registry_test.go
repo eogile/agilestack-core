@@ -30,7 +30,7 @@ func TestListAvailablePlugins(t *testing.T) {
 
 	countAvailablePlugins := len(plugins.Plugins)
 	if countAvailablePlugins == 0 {
-		t.Fatalf("Expected at least one plugin installable, got %d", countAvailablePlugins)
+		t.Fatalf("Expected at least one plugin installable, got zero.")
 	}
 }
 
@@ -81,7 +81,7 @@ func TestListInstalledPluginsEmptyList(t *testing.T) {
 		return
 	}
 	if len(plugins.Plugins) != 0 {
-		t.Errorf("Invalid number of plugins: should be zero, got %d", len(plugins.Plugins))
+		t.Errorf("Invalid number of plugins: should be zero, got %d : %v", len(plugins.Plugins), plugins.Plugins)
 	}
 }
 
@@ -113,7 +113,7 @@ func TestListInstalledPlugins(t *testing.T) {
 	}
 
 	if !pluginsArrayContains(plugins.Plugins, testPluginName) {
-		t.Error("The plugin is not present in the list")
+		t.Errorf("The plugin is not present in the list. Got %v", plugins.Plugins)
 		return
 	}
 
@@ -129,7 +129,7 @@ func TestListInstalledPlugins(t *testing.T) {
 	}
 
 	if pluginsArrayContains(finalPlugins.Plugins, testPluginName) {
-		t.Error("The plugin is present in the list")
+		t.Error("The plugin is present in the list. Got %v", finalPlugins.Plugins)
 		return
 	}
 }
