@@ -164,6 +164,6 @@ func TestUninstallPluginNats(t *testing.T) {
 		&pb.Empty{}, &plugins, 10000*time.Millisecond)
 
 	if len(plugins.Plugins) != 0 {
-		t.Errorf("There should be no installed plugins. Got %v", plugins.Plugins&)
+		t.Errorf("There should be no installed plugins. Got %v", plugins.Plugins)
 	}
 }
