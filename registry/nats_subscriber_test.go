@@ -8,10 +8,6 @@ import (
 	"github.com/eogile/agilestack-core/registry"
 )
 
-const (
-	testPluginName = "agilestack-root-app"
-)
-
 func TestListAvailablePluginsNats(t *testing.T) {
 	setUp()
 

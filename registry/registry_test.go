@@ -9,6 +9,10 @@ import (
 	"github.com/fsouza/go-dockerclient"
 )
 
+const (
+	testPluginName = "agilestack-root-app"
+)
+
 var testRegistry *registry.InMemoryRegistry
 var dockerWrapper *registry.DockerStorageClient
 
@@ -42,7 +46,7 @@ func TestListAvailablePluginsWithInstalledPlugins(t *testing.T) {
 	 */
 	request := pb.InstallPluginRequest{
 		Plugin: &pb.Plugin{
-			Name: "agilestack-room-booking-api",
+			Name: testPluginName,
 		},
 	}
 	_, installErr := testRegistry.InstallPlugin(request)
@@ -58,7 +62,7 @@ func TestListAvailablePluginsWithInstalledPlugins(t *testing.T) {
 	}
 
 	for _, plugin := range plugins.Plugins {
-		if plugin.Name == "agilestack-room-booking-api" {
+		if plugin.Name == testPluginName {
 			t.Errorf("The plugin has been installed. It should not be listed as available")
 		}
 	}
@@ -93,7 +97,7 @@ func TestListInstalledPlugins(t *testing.T) {
 
 	request := pb.InstallPluginRequest{
 		Plugin: &pb.Plugin{
-			Name: "agilestack-room-booking-api",
+			Name: testPluginName,
 		},
 	}
 	_, installErr := testRegistry.InstallPlugin(request)
@@ -108,7 +112,7 @@ func TestListInstalledPlugins(t *testing.T) {
 		return
 	}
 
-	if !pluginsArrayContains(plugins.Plugins, "agilestack-room-booking-api") {
+	if !pluginsArrayContains(plugins.Plugins, testPluginName) {
 		t.Error("The plugin is not present in the list")
 		return
 	}
@@ -116,7 +120,7 @@ func TestListInstalledPlugins(t *testing.T) {
 	/*
 	 * Uninstalling the plugin
 	 */
-	testRegistry.UninstallPlugin(pb.Plugin{Name: "agilestack-room-booking-api"})
+	testRegistry.UninstallPlugin(pb.Plugin{Name: testPluginName})
 
 	finalPlugins, finalErr := testRegistry.ListInstalledPlugins()
 	if finalErr != nil {
@@ -124,7 +128,7 @@ func TestListInstalledPlugins(t *testing.T) {
 		return
 	}
 
-	if pluginsArrayContains(finalPlugins.Plugins, "agilestack-room-booking-api") {
+	if pluginsArrayContains(finalPlugins.Plugins, testPluginName) {
 		t.Error("The plugin is present in the list")
 		return
 	}
@@ -136,7 +140,7 @@ func TestListInstalledPlugins(t *testing.T) {
 func TestInstallPlugin(t *testing.T) {
 	setUp()
 
-	plugin := &pb.Plugin{Name: "agilestack-room-booking-api"}
+	plugin := &pb.Plugin{Name: testPluginName}
 	request := pb.InstallPluginRequest{Plugin: plugin}
 
 	response, err := testRegistry.InstallPlugin(request)
@@ -152,13 +156,13 @@ func TestInstallPlugin(t *testing.T) {
 	 * Checks that the plugin is in the list of installed
 	 * plugins
 	 */
-	assertThatPluginsIsInstalled(t, "agilestack-room-booking-api", true)
+	assertThatPluginsIsInstalled(t, testPluginName, true)
 
 	/*
 	 * Checks that the plugin is not in the list of available
 	 * plugins.
 	 */
-	assertThatPluginsIsAvailable(t, "agilestack-room-booking-api", false)
+	assertThatPluginsIsAvailable(t, testPluginName, false)
 }
 
 /*
@@ -173,7 +177,7 @@ func TestInstallPluginWithStoppedContainer(t *testing.T) {
 	 * Container configuration
 	 */
 	containerConfig := docker.Config{
-		Image: "agilestack-room-booking-api",
+		Image: testPluginName,
 	}
 
 	/*
@@ -185,7 +189,7 @@ func TestInstallPluginWithStoppedContainer(t *testing.T) {
 	}
 
 	containerOptions := docker.CreateContainerOptions{
-		Name:       "agilestack-room-booking-api",
+		Name:       testPluginName,
 		Config:     &containerConfig,
 		HostConfig: &hostConfig,
 	}
@@ -210,7 +214,7 @@ func TestUninstallPlugin(t *testing.T) {
 	/*
 	 * Installing a plugin
 	 */
-	plugin := &pb.Plugin{Name: "agilestack-room-booking-api"}
+	plugin := &pb.Plugin{Name: testPluginName}
 	request := pb.InstallPluginRequest{Plugin: plugin}
 	testRegistry.InstallPlugin(request)
 
@@ -233,11 +237,11 @@ func TestUninstallPlugin(t *testing.T) {
 	 * Checks that the plugin is not in the list of installed
 	 * plugins
 	 */
-	assertThatPluginsIsInstalled(t, "agilestack-room-booking-api", false)
+	assertThatPluginsIsInstalled(t, testPluginName, false)
 
 	/*
 	 * Checks that the plugin is in the list of available
 	 * plugins.
 	 */
-	assertThatPluginsIsAvailable(t, "agilestack-room-booking-api", true)
+	assertThatPluginsIsAvailable(t, testPluginName, true)
 }
