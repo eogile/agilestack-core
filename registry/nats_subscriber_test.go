@@ -8,6 +8,10 @@ import (
 	"github.com/eogile/agilestack-core/registry"
 )
 
+const (
+	testPluginName = "agilestack-root-app"
+)
+
 func TestListAvailablePluginsNats(t *testing.T) {
 	setUp()
 
@@ -72,7 +76,7 @@ func TestInstallPluginNats(t *testing.T) {
 	 */
 	connection := registry.EstablishConnection(localhostNatsServerURL)
 
-	plugin := &pb.Plugin{Name: "agilestack-root-app"}
+	plugin := &pb.Plugin{Name: testPluginName}
 	request := pb.InstallPluginRequest{Plugin: plugin}
 
 	var result = pb.NetResponse{}
@@ -128,7 +132,7 @@ func TestUninstallPluginNats(t *testing.T) {
 	 */
 	connection := registry.EstablishConnection(localhostNatsServerURL)
 
-	plugin := &pb.Plugin{Name: "agilestack-room-booking-api"}
+	plugin := &pb.Plugin{Name: testPluginName}
 	request := pb.InstallPluginRequest{Plugin: plugin}
 
 	/*
