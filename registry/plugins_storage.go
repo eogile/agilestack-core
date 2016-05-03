@@ -4,6 +4,8 @@ import (
 	"log"
 	"strings"
 
+	"errors"
+
 	pb "github.com/eogile/agilestack-core/proto"
 	"github.com/eogile/agilestack-core/registry/storage"
 	"github.com/eogile/agilestack-utils/dockerclient"
@@ -103,6 +105,11 @@ func (dockerWrapper *DockerStorageClient) InstallPlugin(pluginName string, cmd s
 	 * Finding the Docker image matching the plugin's name
 	 */
 	image := dockerWrapper.helper.ImageFromPlugin(pluginName)
+	if image == nil {
+		msg := "Unknown plugin : " + pluginName
+		log.Printf(msg)
+		return errors.New(msg)
+	}
 	log.Printf("Creating container for image %s with cmd %s", image.RepoTags[0], cmd)
 
 	/*
