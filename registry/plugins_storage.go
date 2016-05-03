@@ -4,8 +4,6 @@ import (
 	"log"
 	"strings"
 
-	"os"
-
 	pb "github.com/eogile/agilestack-core/proto"
 	"github.com/eogile/agilestack-core/registry/storage"
 	"github.com/eogile/agilestack-utils/dockerclient"
@@ -35,23 +33,16 @@ type PluginStorageClient interface {
 }
 
 type DockerStorageClient struct {
-	docker    *docker.Client
-	sharedDir string
-	helper    *storage.DockerHelper
+	docker *docker.Client
+	helper *storage.DockerHelper
 }
 
 func NewDockerStorageClient() *DockerStorageClient {
-	sharedDir := os.Getenv("SHARED_FOLDER")
-	if sharedDir == "" {
-		log.Fatal("$SHARED_FOLDER is undefined. Cannot initialize the plugins.")
-	}
-	log.Println("Shared folder :", sharedDir)
 	docker := dockerclient.NewClient().Client
 
 	return &DockerStorageClient{
-		docker:    docker,
-		sharedDir: sharedDir,
-		helper:    storage.NewDockerHelper(docker),
+		docker: docker,
+		helper: storage.NewDockerHelper(docker),
 	}
 }
 

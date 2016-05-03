@@ -31,12 +31,6 @@ var localhostNatsServerURL string
  */
 func init() {
 	log.Println("main init")
-	sharedDir := os.Getenv("SHARED_FOLDER")
-	if sharedDir == "" {
-		homeDir := os.Getenv("HOME")
-		os.Setenv("SHARED_FOLDER", homeDir+"/agilestack/shared")
-	}
-
 	log.SetFlags(log.Lmicroseconds | log.Ldate | log.Ltime)
 }
 
@@ -189,7 +183,7 @@ func installNatsServer() {
 	}
 
 	containerOptions := docker.CreateContainerOptions{
-		Name:       "agilestack-nats",
+		Name:       "nats",
 		Config:     &containerConfig,
 		HostConfig: &hostConfig,
 	}

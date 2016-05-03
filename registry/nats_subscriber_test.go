@@ -54,7 +54,7 @@ func TestListInstalledPluginsNats(t *testing.T) {
 		t.Errorf("Error should be nil : %v", err)
 	}
 	if len(plugins.Plugins) > 0 {
-		t.Errorf("There should be no installed plugins")
+		t.Errorf("There should be no installed plugins. got %+v", plugins.Plugins)
 	}
 }
 

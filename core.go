@@ -13,7 +13,7 @@ func init() {
 
 func main() {
 	log.Print("AT BEGINNING")
-	subscriber := registry.NewNatsSubscriber("http://agilestack-nats.agilestacknet:4222")
+	subscriber := registry.NewNatsSubscriber("http://nats.agilestacknet:4222")
 	subscriber.InitShutdownHook()
 
 	log.Print("before server listening")
