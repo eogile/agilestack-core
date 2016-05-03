@@ -110,7 +110,7 @@ func uninstallPlugins(includingNats bool, all bool) {
 	for _, container := range containers {
 		pluginName := storage.GetPluginName(container.Image)
 		if (includingNats && "nats" == pluginName) || strings.HasPrefix(pluginName, "agilestack-") {
-			log.Printf("Removing container %s", container.Names[0])
+			log.Printf("Removing container %s", pluginName)
 			dockerClient.StopContainer(container.ID, 10)
 			removeOpts := docker.RemoveContainerOptions{ID: container.ID}
 			dockerClient.RemoveContainer(removeOpts)
