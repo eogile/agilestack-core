@@ -13,6 +13,7 @@ import (
 
 	pb "github.com/eogile/agilestack-core/proto"
 	"github.com/eogile/agilestack-core/registry"
+	"github.com/eogile/agilestack-core/registry/storage"
 	"github.com/eogile/agilestack-utils/dockerclient"
 	"github.com/fsouza/go-dockerclient"
 )
@@ -107,7 +108,8 @@ func uninstallPlugins(includingNats bool, all bool) {
 	containers, _ := dockerClient.ListContainers(listOps)
 
 	for _, container := range containers {
-		if (includingNats && "nats" == container.Image) || strings.HasPrefix(container.Image, "agilestack-") {
+		pluginName := storage.GetPluginName(container.Image)
+		if (includingNats && "nats" == pluginName) || strings.HasPrefix(pluginName, "agilestack-") {
 			log.Printf("Removing container %s", container.Names[0])
 			dockerClient.StopContainer(container.ID, 10)
 			removeOpts := docker.RemoveContainerOptions{ID: container.ID}

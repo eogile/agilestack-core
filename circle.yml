@@ -20,7 +20,7 @@ dependencies:
 test:
   pre:
     - docker pull nats
-    - docker pull eogile/agilestack-root-app:latest && docker tag eogile/agilestack-root-app:latest agilestack-root-app:latest
+    - docker pull eogile/agilestack-root-app
     - docker images
 
   override:
