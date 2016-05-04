@@ -14,15 +14,13 @@ before_install:
   - nvm install 5.9
   - nvm use 5.9
 
-after_install:
-  - docker pull nats
-  - docker pull eogile/agilestack-root-app && docker tag eogile/agilestack-root-app agilestack-root-app
-
 before_script:
   - uname -a
   - docker version
   - go version
   - npm version
+  - docker pull nats
+  - docker pull eogile/agilestack-root-app && docker tag eogile/agilestack-root-app agilestack-root-app
 
 script:
   - make setup
