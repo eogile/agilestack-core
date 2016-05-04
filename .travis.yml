@@ -1,0 +1,36 @@
+sudo: required
+
+services:
+  - docker
+
+language: go
+
+go:
+  - 1.6
+
+before_install:
+  - sudo apt-get update
+  - sudo apt-get install -y --force-yes -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" docker-engine
+  - nvm install 5.9
+  - nvm use 5.9
+
+after_install:
+  - docker pull nats
+  - docker pull eogile/agilestack-root-app && docker tag eogile/agilestack-root-app agilestack-root-app
+
+before_script:
+  - uname -a
+  - docker version
+  - go version
+  - npm version
+
+script:
+  - make setup
+  - make
+  - make test
+
+after_success:
+  - |
+    [ "$TRAVIS_BRANCH" != "master" ] || docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+  - |
+    [ "$TRAVIS_BRANCH" != "master" ] || make docker-deploy
